@@ -39,16 +39,17 @@
 
 **`DESIGN.md` at the repo root is the source of truth for all UI work.** Before building or modifying any UI (pages, components, layouts), read it. It defines the token catalog (`{colors.canvas}`, `{typography.display-mega}`, etc.), component specs, and explicit do/don't rules. Tokens are wired into Tailwind via `src/app/globals.css`:
 
-- `bg-canvas`, `bg-canvas-soft`, `bg-surface-card`, `text-ink`, `text-body`, `border-hairline`, `border-hairline-strong` — direct token classes
+- `bg-canvas`, `bg-canvas-soft`, `bg-surface-card`, `bg-ink-band`, `text-ink`, `text-body`, `text-on-ink`, `text-brass`, `border-hairline`, `border-hairline-strong` — direct token classes
 - ShadCN semantic classes (`bg-primary`, `bg-card`, `text-foreground`, etc.) are remapped to DESIGN.md tokens, so `<Button>` and `<Card>` already inherit the system
-- Display utilities: `display-mega`, `display-lg`, `display-md`, `display-sm`, `caption-uppercase` — apply at use sites
-- Fonts: CursorGothic for sans (display + body), JetBrains Mono for code, both wired through `--font-sans` / `--font-mono`
+- Display utilities: `display-mega`, `display-lg`, `display-md`, `display-sm`, `display-quote`, `eyebrow`, `mono-body`, `caption-uppercase` — apply at use sites
+- Fonts: Bodoni Moda (`--font-serif`) for display, CursorGothic for body sans, JetBrains Mono for labels/eyebrows/code — wired through `--font-serif` / `--font-sans` / `--font-mono`
 
 Hard rules from DESIGN.md to remember:
-- Cursor Orange (`bg-primary`) is reserved for primary CTAs and brand wordmark — used scarcely
-- Display headings stay at weight 400 with negative tracking, never bold
-- No drop shadows; depth comes from hairlines + cream-on-white contrast
-- Timeline pastels (`bg-timeline-thinking`, `-grep`, `-read`, `-edit`, `-done`) are scoped to in-product agent UI only
+
+- Brass (`text-brass`, #b8863b) is reserved for eyebrows, numbers, and hairline accents — used scarcely, never as a fill
+- Display headings are didone serif, ALL CAPS, weight 400 — never bold, never sans
+- Square corners everywhere (radius 0); no drop shadows — depth comes from hairlines + cream/ink contrast
+- Alternate cream (`bg-canvas`) and ink (`bg-ink-band`) bands for page rhythm
 
 If `sources/inspiration/` has images, they are mood references — DESIGN.md still wins on tokens and component specs.
 

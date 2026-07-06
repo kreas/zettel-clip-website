@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import { JetBrains_Mono } from 'next/font/google';
+import { Bodoni_Moda, JetBrains_Mono } from 'next/font/google';
 import { Providers } from '@/components/providers';
 import './globals.css';
 
@@ -21,9 +21,17 @@ const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
 });
 
+const bodoniModa = Bodoni_Moda({
+  variable: '--font-serif',
+  subsets: ['latin'],
+  weight: ['400'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
-  title: 'AI Starter Pack',
-  description: 'AI Starter Pack',
+  title: 'Hemingway',
+  description: 'A second brain, written plainly.',
 };
 
 export default function RootLayout({
@@ -33,7 +41,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${cursorGothic.variable} ${jetbrainsMono.variable} antialiased`}>
+      <body
+        className={`${cursorGothic.variable} ${jetbrainsMono.variable} ${bodoniModa.variable} antialiased`}
+      >
         <Providers>{children}</Providers>
       </body>
     </html>

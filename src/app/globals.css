@@ -11,25 +11,24 @@
   --color-canvas-soft: var(--canvas-soft);
   --color-surface-card: var(--surface-card);
   --color-surface-strong: var(--surface-strong);
+  --color-ink-band: var(--ink-band);
   --color-hairline: var(--hairline);
   --color-hairline-soft: var(--hairline-soft);
   --color-hairline-strong: var(--hairline-strong);
+  --color-hairline-on-ink: var(--hairline-on-ink);
   --color-ink: var(--ink);
   --color-body: var(--body-text);
   --color-muted-strong: var(--muted-strong);
   --color-muted-soft: var(--muted-soft);
-  --color-timeline-thinking: var(--timeline-thinking);
-  --color-timeline-grep: var(--timeline-grep);
-  --color-timeline-read: var(--timeline-read);
-  --color-timeline-edit: var(--timeline-edit);
-  --color-timeline-done: var(--timeline-done);
+  --color-brass: var(--primary-base);
+  --color-on-ink: var(--on-ink);
 
   /* shadcn semantic bindings — map DESIGN.md tokens onto shadcn names */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans:
-    var(--font-sans), system-ui, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-sans: var(--font-sans), system-ui, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-serif: var(--font-serif), 'Bodoni Moda', Didot, 'Times New Roman', serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -59,41 +58,39 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --radius-xl: var(--radius);
+  --radius-2xl: var(--radius);
+  --radius-3xl: var(--radius);
+  --radius-4xl: var(--radius);
 }
 
 :root {
-  /* DESIGN.md tokens — light mode is the only mode the design system defines */
-  --canvas: #f7f7f4;
-  --canvas-soft: #fafaf7;
-  --surface-card: #ffffff;
-  --surface-strong: #e6e5e0;
-  --hairline: #e6e5e0;
-  --hairline-soft: #efeee8;
-  --hairline-strong: #cfcdc4;
-  --ink: #26251e;
-  --body-text: #5a5852;
-  --muted-strong: #807d72;
-  --muted-soft: #a09c92;
-  --primary-base: #f54e00;
-  --primary-active: #d04200;
-  --on-primary: #ffffff;
-  --semantic-success: #1f8a65;
-  --semantic-error: #cf2d56;
-  --timeline-thinking: #dfa88f;
-  --timeline-grep: #9fc9a2;
-  --timeline-read: #9fbbe0;
-  --timeline-edit: #c0a8dd;
-  --timeline-done: #c08532;
+  /* DESIGN.md tokens — Ink & Brass (Hemingway). Light mode is the only mode. */
+  --canvas: #f7f2e8;
+  --canvas-soft: #faf6ee;
+  --surface-card: #fffdf8;
+  --surface-strong: #ece4d2;
+  --ink-band: #141210;
+  --hairline: #e0d8c4;
+  --hairline-soft: #eae3d2;
+  --hairline-strong: #c4b998;
+  --hairline-on-ink: #35322c;
+  --ink: #141210;
+  --body-text: #4a463f;
+  --muted-strong: #7d776b;
+  --muted-soft: #a39c8c;
+  --primary-base: #b8863b;
+  --primary-active: #9c7130;
+  --on-ink: #f7f2e8;
+  --on-primary: #fffdf8;
+  --semantic-success: #2d6a4f;
+  --semantic-error: #9b2c2c;
 
-  /* CTAs at rounded.md (8px), cards at rounded.xl = 12px via shadcn scale */
-  --radius: 0.5rem;
+  /* DESIGN.md: square corners everywhere — this is a print system */
+  --radius: 0rem;
 
   /* shadcn semantic bindings */
   --background: var(--canvas);
@@ -102,8 +99,8 @@
   --card-foreground: var(--ink);
   --popover: var(--surface-card);
   --popover-foreground: var(--ink);
-  --primary: var(--primary-base);
-  --primary-foreground: var(--on-primary);
+  --primary: var(--ink);
+  --primary-foreground: var(--on-ink);
   --secondary: var(--surface-card);
   --secondary-foreground: var(--ink);
   --muted: var(--canvas-soft);
@@ -112,17 +109,17 @@
   --accent-foreground: var(--ink);
   --destructive: var(--semantic-error);
   --border: var(--hairline);
-  --input: var(--hairline);
+  --input: var(--hairline-strong);
   --ring: var(--ink);
-  --chart-1: var(--timeline-thinking);
-  --chart-2: var(--timeline-grep);
-  --chart-3: var(--timeline-read);
-  --chart-4: var(--timeline-edit);
-  --chart-5: var(--timeline-done);
+  --chart-1: var(--primary-base);
+  --chart-2: var(--semantic-success);
+  --chart-3: var(--muted-strong);
+  --chart-4: var(--hairline-strong);
+  --chart-5: var(--ink);
   --sidebar: var(--canvas);
   --sidebar-foreground: var(--ink);
-  --sidebar-primary: var(--primary-base);
-  --sidebar-primary-foreground: var(--on-primary);
+  --sidebar-primary: var(--ink);
+  --sidebar-primary-foreground: var(--on-ink);
   --sidebar-accent: var(--canvas-soft);
   --sidebar-accent-foreground: var(--ink);
   --sidebar-border: var(--hairline);
@@ -135,17 +132,16 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings:
-      'ss01' on,
-      'cv11' on;
   }
-  /* DESIGN.md: display weight stays at 400 with negative letter-spacing */
+  /* DESIGN.md: display is didone serif, ALL CAPS, weight 400, tight tracking */
   h1,
   h2,
   h3,
   h4 {
+    font-family: var(--font-serif), 'Bodoni Moda', Didot, 'Times New Roman', serif;
     font-weight: 400;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
     color: var(--ink);
   }
   code,
@@ -156,33 +152,98 @@
   }
 }
 
+/* Display scale — didone serif, uppercase, weight 400 */
 @utility display-mega {
+  font-family: var(--font-serif), 'Bodoni Moda', Didot, serif;
   font-size: 4.5rem; /* 72 */
   font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
 }
 @utility display-lg {
-  font-size: 2.25rem; /* 36 */
+  font-family: var(--font-serif), 'Bodoni Moda', Didot, serif;
+  font-size: 2.5rem; /* 40 */
   font-weight: 400;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
 }
 @utility display-md {
-  font-size: 1.625rem; /* 26 */
+  font-family: var(--font-serif), 'Bodoni Moda', Didot, serif;
+  font-size: 1.75rem; /* 28 */
   font-weight: 400;
-  line-height: 1.25;
-  letter-spacing: -0.0125em;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
 }
 @utility display-sm {
+  font-family: var(--font-serif), 'Bodoni Moda', Didot, serif;
   font-size: 1.375rem; /* 22 */
   font-weight: 400;
-  line-height: 1.3;
+  line-height: 1.25;
   letter-spacing: -0.005em;
+  text-transform: uppercase;
 }
+/* Serif italic pull quote */
+@utility display-quote {
+  font-family: var(--font-serif), 'Bodoni Moda', Didot, serif;
+  font-size: 2rem; /* 32 */
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.35;
+}
+/* Mono eyebrow — brass labels like "THE METHOD — 01/03" */
+@utility eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem; /* 12 */
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+/* Mono small body — card descriptions, captions */
+@utility mono-body {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem; /* 13 */
+  font-weight: 400;
+  line-height: 1.6;
+}
+/* Smooth anchor scrolling; scroll-padding clears the sticky nav */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+/* Scroll-reveal: elements fade and drift up as they enter the viewport */
+.reveal {
+  opacity: 0;
+  transform: translateY(1rem);
+  transition:
+    opacity 0.7s ease-out,
+    transform 0.7s ease-out;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Kept for back-compat with auth pages */
 @utility caption-uppercase {
+  font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.6875rem; /* 11 */
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.4;
   letter-spacing: 0.08em;
   text-transform: uppercase;
