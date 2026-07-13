@@ -9,11 +9,11 @@ describe('QuoteCta', () => {
     expect(screen.getByText(/— The Hemingway Method/)).toBeInTheDocument();
   });
 
-  it('renders the CTA link to signup', () => {
+  it('renders the CTA link to the free macOS download', () => {
     render(<QuoteCta />);
-    expect(screen.getByRole('link', { name: /Give your AI a memory/ })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Download free for macOS/ })).toHaveAttribute(
       'href',
-      '/signup',
+      'https://download.hemingway.md/hemingway-1.0.0.dmg',
     );
   });
 });

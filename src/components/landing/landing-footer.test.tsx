@@ -19,6 +19,11 @@ describe('LandingFooter', () => {
   it('renders footer links', () => {
     render(<LandingFooter />);
     expect(screen.getByRole('link', { name: 'The Method' })).toHaveAttribute('href', '#method');
+    expect(screen.getByRole('link', { name: 'LLM Wiki' })).toHaveAttribute('href', '/llm-wiki');
+    expect(screen.getByRole('link', { name: 'Download' })).toHaveAttribute(
+      'href',
+      'https://download.hemingway.md/hemingway-1.0.0.dmg',
+    );
     expect(screen.getByRole('link', { name: 'Privacy' })).toBeInTheDocument();
   });
 

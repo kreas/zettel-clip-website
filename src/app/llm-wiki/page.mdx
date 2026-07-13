@@ -1,0 +1,104 @@
+## I. The Problem With How We Use AI Today
+
+You upload a folder of PDFs to an LLM. You ask a question. It retrieves the chunks that look relevant, reads them, and generates an answer. You ask another question. It does the same thing again. Nothing carries over. Nothing compounds.
+
+This is **Retrieval-Augmented Generation**, or RAG, and it is how almost every AI-document tool works today. NotebookLM, ChatGPT file uploads, enterprise search. The engineering is impressive. A single query can produce a good answer, but the model is **stateless across questions**. Ask something that requires synthesizing five documents, and the LLM has to find and piece together the relevant fragments every single time. Nothing is built up. The knowledge does not accumulate. Every query is a fresh act of rediscovery.
+
+This is not a knowledge base. It is a retrieval pipeline. And the difference matters.
+
+## II. A Different Idea
+
+What if the LLM **built a knowledge base** and kept it current?
+
+You add a new source. The LLM does not just index it for later retrieval. It reads the whole source. It extracts the key information. It integrates the result into a structured, interlinked collection of markdown files. It updates entity pages. It revises topic summaries. It notes where new data contradicts old claims. The knowledge is **compiled once and then kept current**, not re-derived on every query.
+
+The wiki is a **persistent, compounding artifact**. The cross-references are already there. The contradictions have already been flagged. The synthesis already reflects everything you have read. The wiki keeps getting richer with every source you add and every question you ask.
+
+You never write the wiki yourself. The LLM writes and maintains all of it. You are in charge of sourcing, exploration, and asking the right questions. The LLM does the rest: the summarizing, cross-referencing, filing, and bookkeeping that makes a knowledge base actually useful over time.
+
+Karpathy proposed this pattern in April 2026. He called it the **LLM Wiki**. The concept is simple: let the LLM maintain the knowledge base. The implication is that the knowledge base no longer decays. He described the pattern and left the implementation to you. He did not ship the product.
+
+## III. Why Your Notes Die
+
+If you have ever tried to maintain a personal knowledge base, you already know the problem. It is not the reading or the thinking. That part is fun. The problem is the **bookkeeping**.
+
+Updating cross-references. Keeping summaries current. Noting when new data contradicts old claims. Maintaining consistency across dozens of pages. Every new source means updating N existing pages, checking for contradictions, updating the index, fixing broken links. The work is relentless.
+
+Humans abandon wikis because **the maintenance burden grows faster than the value**. You start with good intentions. You add notes, link them, tag them. Then you stop. A deadline intervenes. You forget to update a cross-reference. You add a note without linking it to anything. Six months later, the wiki is a graveyard. The links are broken. The summaries are stale. You do not trust it anymore, so you stop using it. And everything you put into it decays.
+
+Vannevar Bush saw this coming in 1945. He proposed the **Memex**, a personal knowledge store with associative trails between documents. His vision was closer to the LLM Wiki than to what the web became: private, actively curated, with connections between documents as valuable as the documents themselves. But he could not solve the maintenance problem. Nobody could.
+
+The LLM Wiki solves it. **The task that humans are worst at, bookkeeping, is the task that LLMs are best at.** LLMs do not get bored. They do not forget to update a cross-reference. They can touch 15 files in one pass. The cost of maintenance approaches zero.
+
+This is the shift that matters. Not a better search box. Not a faster retrieval pipeline. A knowledge base that **does not decay**.
+
+## IV. The Evidence
+
+It is one thing to argue from first principles. It is another to measure. In May 2026, Juan M. Huerta published **WiCER** (Wiki-memory Compile, Evaluate, Refine), which provides the first rigorous empirical comparison of compiled knowledge against retrieval.
+
+Huerta measured the compilation gap across 17 RepLiQA domains, 6,800 questions in total. Three findings matter:
+
+1. **Compiled knowledge beats retrieval when done well.** Full-context serving of a curated wiki outperforms RAG: 4.38 vs. 4.08 out of 5, with 7.3x faster time-to-first-token. The wiki already has the synthesis. RAG has to reconstruct it every time.
+
+2. **Blind compilation fails.** Naive summarization into a wiki discards critical facts 53 to 60% of the time. The wiki looks fine. The structure is clean. The summaries read well. But the specific detail you will need three weeks from now is gone, lost in the summarization, and you will not know until you ask and the wiki cannot answer. This is the **compilation gap**.
+
+3. **The gap is closeable.** WiCER's iterative algorithm, inspired by formal verification techniques, recovers 80% of lost quality in one to two passes. The key is **targeted diagnosis**: find the specific facts that were lost, not generic "keep everything" instructions.
+
+The lesson: **naive compilation is worse than no compilation, but careful compilation beats retrieval.** You cannot just summarize and hope. You have to test, find the gaps, and iterate. The quality of the wiki matters enormously.
+
+## V. Why Hemingway
+
+The LLM Wiki is a pattern, not a product. You can implement it yourself: set up an LLM agent, hand-write a schema that tells the agent how to name files, where to file them, and what to do when sources conflict, manage the raw sources directory, and wire up the ingest and lint workflows. But you are now maintaining infrastructure, not building knowledge.
+
+**Hemingway** is a native macOS app built to make the LLM Wiki pattern real without that setup tax.
+
+It lives in your menu bar. You highlight text in any application, hit a hotkey, and it captures the source as a markdown note with frontmatter and wikilinks. The note joins your wiki. The AI reads it, extracts the key information, and integrates it into the existing pages. Entity pages get updated. Cross-references get created. The index and log get appended to.
+
+Here is what that looks like in practice. You read a paper on attention mechanisms. You highlight the key paragraph. You hit the hotkey. By the time you switch back to your agent, the wiki already has a new note on sparse attention, linked to your existing notes on transformers, and the topic summary has been revised. You did not write any of that. You just captured the source.
+
+The app is also an **MCP server**. When you point Claude, or any MCP-compatible agent, at Hemingway, it can search your notes, read them, create new ones, and follow the wikilink graph. Your AI does not just retrieve chunks. It reads a structured, maintained knowledge base that gets richer every time you use it. The app is the server. There is no plugin to install, no export step, no separate process to run.
+
+The architecture maps directly to the pattern:
+
+- **Raw sources** are captured from anywhere on your Mac with a hotkey.
+- **The wiki** is a folder of plain markdown files with wikilinks, tags, and frontmatter. If you stop using Hemingway, the wiki is still there. You can open it in Obsidian, VS Code, or `cat`. There is no lock-in.
+- **The schema** is built into the app. You do not write a `CLAUDE.md` or an `AGENTS.md`. Hemingway handles the conventions, the tag taxonomy, the page thresholds, and the ingest and lint workflows.
+- **The MCP server** exposes the wiki to your AI as a set of tools: search notes, read a note, create a note, list spaces and tags. Your AI operates on the wiki directly, not through a retrieval pipeline.
+
+Hemingway uses your configured LLM provider for maintenance. The same model you use for chat maintains the wiki. Local or cloud, your choice.
+
+## VI. How It Differs From What You Already Have
+
+You probably already have a note-taking app. You may already have an AI chat tool. Why add another thing?
+
+**vs. RAG tools (NotebookLM, ChatGPT file uploads).** These are the stateless retrieval pipeline described in Section I. Hemingway replaces it with a compiled wiki that compounds across queries.
+
+**vs. Obsidian without AI.** Obsidian is an excellent editor for a wiki of markdown files. But you maintain it yourself. You write the cross-references. You update the summaries. You fix the broken links. Over time, the maintenance burden wins. Hemingway uses Obsidian-compatible markdown with wikilinks and frontmatter, but the AI maintains the graph. You curate and query. The AI does the bookkeeping.
+
+**vs. Obsidian with AI plugins.** Plugin-based AI operates inside the editor as a chat assistant. It can help you write, but it does not maintain the wiki. It does not ingest sources, update entity pages, run lint checks, or serve the wiki to external agents. Hemingway's AI owns the wiki layer entirely and exposes it to any MCP-compatible agent through a built-in server.
+
+**vs. Notion AI.** Notion is a database-driven editor. Its AI assists you inside the editor. It does not maintain a wikilink graph, expose an MCP server, or compile sources into structured pages. The knowledge stays in your database rows, not in interlinked markdown files you own.
+
+**vs. building the LLM Wiki yourself.** The DIY path gives you full control. Hemingway gives you a working system on day one. For most people, the difference between those two is the difference between having a knowledge base and not having one.
+
+## VII. What This Becomes
+
+The Memex proposed the vision but could not solve the maintenance. The Zettelkasten method solved the structure but put the burden on the human. Knowledge graphs solved the formalism but made the content inaccessible. RAG solved the retrieval but threw away the accumulation.
+
+The LLM Wiki solves the maintenance, keeps the structure, stays human-readable, and **compounds**. Every source you add makes every existing page richer. Every question you ask and file back makes the wiki smarter. The knowledge base grows in value with use, not just with size.
+
+Hemingway is this idea, built as a native Mac app with a built-in MCP server. You capture sources with a hotkey. The AI maintains the wiki. Your agents read and write to it directly. The wiki does not decay.
+
+The shift is from retrieval to compilation. Everything else follows.
+
+Hemingway is available for macOS. [Download](https://download.hemingway.md/hemingway-1.0.0.dmg).
+
+---
+
+### References
+
+- Karpathy, A. (2026). *LLM Wiki: A pattern for building personal knowledge bases using LLMs.* [Gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)
+- Huerta, J. M. (2026). *WiCER: Wiki-memory Compile, Evaluate, Refine. Iterative Knowledge Compilation for LLM Wiki Systems.* [arXiv:2605.07068](https://arxiv.org/abs/2605.07068)
+- Huerta, J. M. (2026). *Streaming Knowledge Compilation: Proactive Materiality-Scored Pinning for Time-Evolving LLM Wikis.* [arXiv:2606.09877](https://arxiv.org/abs/2606.09877)
+- Pan, S. et al. (2023). *Unifying Large Language Models and Knowledge Graphs: A Roadmap.* [arXiv:2306.08302](https://arxiv.org/abs/2306.08302)
+- Bush, V. (1945). *As We May Think.* The Atlantic Monthly.

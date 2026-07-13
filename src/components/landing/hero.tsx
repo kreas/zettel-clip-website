@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { MACOS_DMG_URL } from '@/lib/download';
+
 export function Hero() {
   return (
     <section className="border-b border-hairline">
@@ -18,12 +20,12 @@ export function Hero() {
             knowledge becomes your AI&rsquo;s context.
           </p>
           <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-            <Link
-              href="/signup"
+            <a
+              href={MACOS_DMG_URL}
               className="eyebrow inline-flex h-11 items-center justify-center border-t border-brass bg-ink px-6 text-on-ink transition-colors hover:bg-ink/90"
             >
               Download for macOS
-            </Link>
+            </a>
             <Link
               href="#method"
               className="eyebrow inline-flex h-11 items-center px-2 text-ink underline-offset-4 transition-colors hover:text-brass"

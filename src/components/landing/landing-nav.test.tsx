@@ -10,13 +10,15 @@ describe('LandingNav', () => {
 
   it('renders section links', () => {
     render(<LandingNav />);
-    expect(screen.getByRole('link', { name: 'Library' })).toHaveAttribute('href', '#method');
-    expect(screen.getByRole('link', { name: 'Method' })).toHaveAttribute('href', '#writing-room');
-    expect(screen.getByRole('link', { name: 'Pricing' })).toHaveAttribute('href', '#pricing');
+    expect(screen.getByRole('link', { name: 'Method' })).toHaveAttribute('href', '/#method');
+    expect(screen.getByRole('link', { name: 'LLM Wiki' })).toHaveAttribute('href', '/llm-wiki');
   });
 
-  it('renders the join CTA pointing at signup', () => {
+  it('renders the download CTA pointing at the free DMG', () => {
     render(<LandingNav />);
-    expect(screen.getByRole('link', { name: /Join/ })).toHaveAttribute('href', '/signup');
+    expect(screen.getByRole('link', { name: /Download/ })).toHaveAttribute(
+      'href',
+      'https://download.hemingway.md/hemingway-1.0.0.dmg',
+    );
   });
 });

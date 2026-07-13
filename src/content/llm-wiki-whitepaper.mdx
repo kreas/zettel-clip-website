@@ -1,0 +1,163 @@
+export const metadata = {
+  title: "The LLM Wiki — Compiled Knowledge for the Age of Agents",
+  description:
+    "Why persistent, LLM-maintained knowledge bases outperform retrieval-augmented generation, and what it takes to build one that compounds.",
+  publishedAt: "2026-07-13",
+  author: "Hemingway",
+};
+
+## I. The Retrieval Problem
+
+Every time you ask an LLM a question about your documents, it starts from zero.
+
+You upload a folder of PDFs. You ask a question. The system retrieves the chunks that look relevant, the LLM reads them, and it generates an answer. Next question — same thing. It finds chunks, reads them, answers. Nothing carries over. Nothing compounds.
+
+This is **Retrieval-Augmented Generation** — RAG — and it is how almost every LLM-document tool works today: NotebookLM, ChatGPT file uploads, enterprise search, the vast majority of "chat with your data" products. The engineering is impressive. The results, for a single query, can be good. But the model is fundamentally **stateless across questions**. Ask something that requires synthesizing five documents, and the LLM has to find and piece together the relevant fragments every single time. Nothing is built up. The knowledge doesn't accumulate. Every query is a fresh act of rediscovery.
+
+RAG is a retrieval pipeline, not a knowledge base. The difference matters.
+
+## II. The Compiled Knowledge Alternative
+
+What if, instead of retrieving from raw documents at query time, the LLM **built a knowledge base** — and kept it current?
+
+You add a new source. The LLM doesn't just index it for later retrieval. It reads the whole thing, extracts the key information, and integrates it into a structured, interlinked collection of markdown files. It updates entity pages. It revises topic summaries. It notes where new data contradicts old claims. It strengthens or challenges the evolving synthesis. The knowledge is **compiled once and then kept current**, not re-derived on every query.
+
+The wiki is a **persistent, compounding artifact**. The cross-references are already there. The contradictions have already been flagged. The synthesis already reflects everything you've read. The wiki keeps getting richer with every source you add and every question you ask.
+
+You never write the wiki yourself. The LLM writes and maintains all of it. You're in charge of sourcing, exploration, and asking the right questions. The LLM does the rest — the summarizing, cross-referencing, filing, and bookkeeping that makes a knowledge base actually useful over time.
+
+> Obsidian is the IDE; the LLM is the programmer; the wiki is the codebase.
+
+This is the **LLM Wiki pattern**, proposed by Andrej Karpathy in April 2026. It's simple in concept, radical in implication, and now — as recent research confirms — empirically validated.
+
+## III. Why Humans Abandon Knowledge Bases
+
+The idea of a personal knowledge base is not new. Vannevar Bush proposed the **Memex** in 1945 — a personal, curated knowledge store with associative trails between documents. His vision was closer to the LLM Wiki than to what the web became: private, actively curated, with connections between documents as valuable as the documents themselves.
+
+But there was a problem Bush couldn't solve: **who does the maintenance?**
+
+Maintaining a knowledge base has two parts. The first — reading, thinking, drawing connections — is the fun part. Humans are good at it and generally enjoy it. The second — bookkeeping — is relentless. Updating cross-references. Keeping summaries current. Noting when new data contradicts old claims. Maintaining consistency across dozens of pages. Every new source means updating N existing pages, checking for contradictions, updating the index, fixing broken links.
+
+Humans abandon wikis because **the maintenance burden grows faster than the value**. The work is O(n) per ingest, and the constant is high because humans get bored, forget to update a cross-reference, or simply stop caring. The wiki degrades. Links break. Summaries go stale. Eventually it becomes a graveyard — a pile of files that no one trusts and no one maintains.
+
+This is the core economic insight of the LLM Wiki pattern: **the task that humans are worst at — bookkeeping — is the task that LLMs are best at.** LLMs don't get bored. They don't forget to update a cross-reference. They can touch 15 files in one pass without complaint. The cost of maintenance approaches zero. The wiki stays maintained because the maintenance cost is effectively zero.
+
+The human's job is to curate sources, direct analysis, ask good questions, and think about what it all means. The LLM's job is everything else.
+
+## IV. Three Layers
+
+The architecture is deliberately simple — three layers, each with a clear owner.
+
+**Layer 1: Raw Sources.** Your curated collection of source documents. Articles, papers, images, data files. These are **immutable** — the LLM reads from them but never modifies them. This is the source of truth. Each raw file carries frontmatter: the original URL, the ingestion date, a SHA-256 hash of the body content for drift detection. Re-ingest the same URL later, recompute the hash, and you know immediately whether the source has changed.
+
+**Layer 2: The Wiki.** A directory of LLM-generated markdown files. Entity pages for people, organizations, products. Concept pages for ideas and topics. Comparison pages for side-by-side analyses. An index. A log. The LLM owns this layer entirely. It creates pages, updates them when new sources arrive, maintains cross-references, and keeps everything consistent. Every page has YAML frontmatter — title, dates, type, tags, sources — and every page links to at least two others via `[[wikilinks]]`. The wiki is a graph, not a pile.
+
+**Layer 3: The Schema.** A configuration document — a `CLAUDE.md`, an `AGENTS.md` — that tells the LLM how the wiki is structured, what the conventions are, and what workflows to follow when ingesting sources, answering questions, or maintaining the wiki. It defines the tag taxonomy: tags must be declared here before they're used, which prevents tag sprawl. It defines page thresholds: when to create a new page, when to update an existing one, when to split a page that's grown too large. This is the key file — it's what makes the LLM a **disciplined wiki maintainer** rather than a generic chatbot. You and the LLM co-evolve it over time.
+
+## V. Three Operations
+
+The wiki has three core operations. Each has a defined workflow that keeps the wiki healthy and compounding.
+
+**Ingest.** You drop a new source into the raw collection and tell the LLM to process it. The LLM reads the source, discusses key takeaways with you, checks what already exists in the wiki, writes or updates entity and concept pages, and appends an entry to the log. A single source can trigger updates across 10–15 wiki pages. This is normal — it's the compounding effect. Every source makes the existing pages richer, not just the collection larger.
+
+**Query.** You ask questions against the wiki. The LLM reads the index to find relevant pages, drills into them, and synthesizes an answer with citations. The key insight: good answers get filed back into the wiki as new pages. A comparison you asked for, an analysis, a connection you discovered — these are valuable and shouldn't disappear into chat history. This way your explorations compound in the knowledge base, just like ingested sources do.
+
+**Lint.** Periodically, the LLM health-checks the wiki. It looks for orphan pages with no inbound links, broken wikilinks pointing to pages that don't exist, stale content whose `updated` date is months behind the most recent source, contradictions between pages on the same topic, missing cross-references, and data gaps that could be filled with a web search. The LLM is good at suggesting new questions to investigate and new sources to look for. This keeps the wiki healthy as it grows.
+
+Two special files form the navigational backbone:
+
+- **`index.md`** is content-oriented — a catalog of every page with a one-line summary, organized by category. The LLM reads it first when answering queries. This works surprisingly well at moderate scale, and avoids the need for embedding-based retrieval infrastructure.
+- **`log.md`** is chronological — an append-only record of every ingest, query, and lint pass. It gives the LLM session continuity and gives you a timeline of the wiki's evolution.
+
+## VI. The Evidence
+
+The LLM Wiki pattern is compelling in theory. But does compiled knowledge actually outperform retrieval?
+
+Until recently, this was an open question. In May 2026, Juan M. Huerta published **WiCER** — Wiki-memory Compile, Evaluate, Refine — which provides the first rigorous empirical answer.
+
+Huerta measured the compilation gap across 17 RepLiQA domains (6,800 questions). The findings:
+
+- Full-context KV cache inference — serving the compiled wiki directly — **outperforms RAG** on curated knowledge: 4.38 vs. 4.08 out of 5, with 7.3× faster time-to-first-token. Compiled knowledge, when done well, beats retrieval.
+- But compiled knowledge **degrades below RAG** at scale due to attention dilution. As the wiki grows, the LLM has more context to attend to, and quality drops.
+- And — critically — **blind compilation fails entirely**: 2.14–2.32 vs. 3.46 for raw full-context, a 53–60% catastrophic failure rate. Naive summarization into a wiki is worse than no wiki at all.
+
+That last finding is the one that matters most. The compilation step — the act of distilling raw documents into a wiki — can **catastrophically discard critical facts**. The wiki looks fine. The structure is clean. The summaries read well. But the specific detail you'll need three weeks from now is gone, lost in the summarization, and you won't know until you ask and the wiki can't answer.
+
+WiCER's solution is inspired by **CEGAR** — Counterexample-Guided Abstraction Refinement, a technique from formal verification. The algorithm is iterative:
+
+1. **Compile** — the LLM compiles raw documents into a wiki.
+2. **Evaluate** — diagnostic probes test whether the compiled wiki can answer known questions.
+3. **Refine** — identify dropped facts (the "counterexamples") and force their preservation in subsequent compilations.
+
+One to two iterations recover **80% of lost quality**. Catastrophic failures drop by 55%. And the ablation confirms that **targeted diagnosis** — finding the specific facts that were lost — drives the gains, not generic "keep everything" instructions.
+
+The lesson is clear: **compiled knowledge beats retrieval when done well, but naive compilation is worse than no compilation.** The quality of the wiki matters enormously. You can't just summarize and hope. You have to test, find the gaps, and iterate.
+
+## VII. The Streaming Problem
+
+Huerta's second paper, published in June 2026, addresses a problem the original LLM Wiki pattern doesn't fully confront: **information changes.**
+
+The wiki assumes a static corpus. But sources evolve. Wikipedia articles get edited. Research findings get overturned. Stock prices move. How do you keep the wiki current without recompiling everything from scratch?
+
+**Streaming Knowledge Compilation** formalizes this as an online problem: given a document stream, a fixed token budget, and future queries unknown at ingestion time, maintain a compiled wiki that minimizes cumulative regret against an offline oracle with perfect foresight.
+
+The key innovation is a **materiality signal** — a function that scores how important a document is for a given entity at a given time, acting as a query-relevance surrogate before queries arrive. In finance, the signal is abnormal stock volatility predicted by a frozen Llama 3.1 8B classification head (AUROC 0.728 on 76K articles). In Wikipedia, the signal is the **Abnormal Edit Ratio** — a cross-sectionally normalized edit velocity. Sudden spikes in editing activity signal that an article's content is changing in ways worth capturing.
+
+The paper proves an O(√(T log K)) regret bound, where the only domain-specific quantity is the prediction error of the materiality signal. The bound applies to **any domain** where knowledge gaps can be predicted from streaming signals.
+
+There's also a critical methodological finding: a pervasive **LLM-as-judge confound** on post-training knowledge. When the compiled wiki contains information the LLM already saw during training, absolute QA scores are misleading — the LLM might score well because it already knew the answer, not because the wiki helped. Regret analysis — how much better you do *with* the wiki versus *without* — is the reliable evaluation metric, not raw accuracy.
+
+For wiki builders, the implications are direct:
+
+- Your wiki needs a **streaming strategy**. Don't just ingest once. Have a signal for what's worth re-ingesting.
+- **Edit velocity is a free signal.** For any wiki that mirrors external sources, sudden changes in the source indicate re-compilation is needed.
+- **Budget your token spend.** As the wiki grows, you must decide what to keep and what to drop. The materiality signal tells you.
+- **Evaluate with regret, not absolutes.** A high QA score might mean your LLM already knew the answer, not that your wiki helped.
+
+## VIII. The Knowledge Graph Connection
+
+An LLM Wiki is, structurally, a **knowledge graph** — just rendered in a format that humans and LLMs can both read naturally.
+
+Entity pages are nodes. Wikilinks are edges. Concept pages are topic clusters. Comparisons are relation assertions. Tags are type annotations. Obsidian's graph view visualizes this directly: the wiki's topology is a graph, and the graph's quality — its density of connections, its absence of orphan nodes — is a proxy for the wiki's health.
+
+The academic literature on unifying LLMs and Knowledge Graphs, surveyed by Pan et al. (2023), frames the complementary relationship: knowledge graphs can ground LLMs in factual, verifiable knowledge, reducing hallucination; LLMs can help construct, query, and maintain knowledge graphs, reducing the human cost of KG management. The LLM Wiki pattern is the personal-scale instantiation of this same idea — a soft, human-readable knowledge graph that an LLM builds and maintains on your behalf.
+
+The difference is representation. Formal KGs use triples — (subject, predicate, object) — which are precise but require specialized tooling. LLM wikis use natural language markdown with wikilinks, which trade formal precision for human readability and LLM writability. The wiki is something you can read directly, browse in a graph view, and trust the LLM can write and maintain without a database layer. When formal precision is needed, a wiki can be extracted into a KG. When human consumption is the priority, a KG can be rendered into wiki pages. They are complementary, not competing.
+
+## IX. Building One
+
+The pattern is intentionally abstract — it describes the idea, not a specific implementation. The directory structure, the schema conventions, the page formats, the tooling — all of that depends on your domain, your preferences, and your LLM of choice. But the core workflow is stable:
+
+1. **Start with a schema.** Write a document that tells the LLM how the wiki is structured and what conventions to follow. This is the configuration that makes the LLM disciplined. Define a tag taxonomy. Define page thresholds. Define the ingest, query, and lint workflows.
+
+2. **Ingest sources one at a time.** Drop a source into the raw collection. Let the LLM read it, discuss takeaways with you, write or update pages, and update the index and log. Stay involved — guide what to emphasize, check the updates, browse the graph view. Batch ingestion is possible but the one-at-a-time rhythm keeps quality high.
+
+3. **Query against the wiki.** Ask questions. Read the synthesized answers. File valuable answers back as new pages. The wiki should get richer every time you use it, not just every time you ingest.
+
+4. **Lint periodically.** Check for orphans, broken links, stale content, contradictions, missing cross-references. The LLM is good at suggesting new questions and new sources. Let it.
+
+5. **Handle the compilation gap.** Don't blindly summarize. Test your wiki against diagnostic queries. When it fails, identify what fact was lost and re-compile with that fact pinned. Targeted diagnosis beats generic preservation by a factor of 6×.
+
+6. **Handle streaming.** If your sources change over time, have a signal for what's worth re-ingesting. Edit velocity is a free signal for any source that has one. Budget your token spend — decide what to keep and what to drop as the wiki grows.
+
+## X. What This Becomes
+
+The LLM Wiki is not a product. It's a pattern — a way of structuring the relationship between a human, an LLM, and a growing body of knowledge. It draws from the Memex (1945), the Zettelkasten method, the knowledge graph tradition, and the RAG engineering practice, but it is distinct from all of them.
+
+The Memex proposed the vision but couldn't solve the maintenance. The Zettelkasten method solved the structure but put the burden on the human. Knowledge graphs solved the formalism but made the content inaccessible to both humans and LLMs. RAG solved the retrieval but threw away the accumulation.
+
+The LLM Wiki solves the maintenance, keeps the structure, stays human-readable, and **compounds**. Every source you add makes every existing page richer. Every question you ask and file back makes the wiki smarter. The knowledge base grows in value with use, not just with size.
+
+This is the shift: from **retrieval** to **compilation**, from **stateless queries** to **compounding knowledge**, from **human-maintained wikis that decay** to **LLM-maintained wikis that endure**. The wiki is not a search index. It is a persistent, evolving, LLM-maintained understanding of your domain — and it gets better every time you use it.
+
+---
+
+### References
+
+- Karpathy, A. (2026). *LLM Wiki: A pattern for building personal knowledge bases using LLMs.* [Gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)
+- Huerta, J. M. (2026). *WiCER: Wiki-memory Compile, Evaluate, Refine — Iterative Knowledge Compilation for LLM Wiki Systems.* [arXiv:2605.07068](https://arxiv.org/abs/2605.07068)
+- Huerta, J. M. (2026). *Streaming Knowledge Compilation: Proactive Materiality-Scored Pinning for Time-Evolving LLM Wikis.* [arXiv:2606.09877](https://arxiv.org/abs/2606.09877)
+- Pan, S. et al. (2023). *Unifying Large Language Models and Knowledge Graphs: A Roadmap.* [arXiv:2306.08302](https://arxiv.org/abs/2306.08302)
+- Bush, V. (1945). *As We May Think.* The Atlantic Monthly.
+- *Engineering the RAG Stack: A Comprehensive Review of the Architecture and Trust Frameworks for Retrieval-Augmented Generation Systems.* (2025). [arXiv:2601.05264](https://arxiv.org/abs/2601.05264)
+- *Expert Mind: A Retrieval-Augmented Architecture for Expert Knowledge Preservation in the Energy Sector.* (2026). [arXiv:2603.14541](https://arxiv.org/abs/2603.14541)

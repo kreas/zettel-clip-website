@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
-const LEFT_LINKS = [
-  { label: 'Library', href: '#method' },
-  { label: 'Method', href: '#writing-room' },
-];
+import { MACOS_DMG_URL } from '@/lib/download';
 
-const RIGHT_LINKS = [{ label: 'Pricing', href: '#pricing' }];
+const LEFT_LINKS = [
+  { label: 'Method', href: '/#method' },
+  { label: 'LLM Wiki', href: '/llm-wiki' },
+];
 
 export function LandingNav() {
   return (
@@ -31,18 +31,9 @@ export function LandingNav() {
         </Link>
 
         <nav className="flex items-center justify-end gap-8">
-          {RIGHT_LINKS.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="eyebrow hidden text-body transition-colors hover:text-brass md:block"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <Link href="/signup" className="eyebrow text-ink transition-colors hover:text-brass">
-            Join &rarr;
-          </Link>
+          <a href={MACOS_DMG_URL} className="eyebrow text-ink transition-colors hover:text-brass">
+            Download &rarr;
+          </a>
         </nav>
       </div>
     </header>

@@ -1,13 +1,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { MACOS_DMG_URL } from '@/lib/download';
+
 const FOOTER_COLUMNS: { header: string; links: { label: string; href: string }[] }[] = [
   {
     header: 'Product',
     links: [
       { label: 'The Method', href: '#method' },
-      { label: 'Writing Room', href: '#writing-room' },
-      { label: 'Pricing', href: '#pricing' },
+      { label: 'LLM Wiki', href: '/llm-wiki' },
+      { label: 'Download', href: MACOS_DMG_URL },
     ],
   },
   {
