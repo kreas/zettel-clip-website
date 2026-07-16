@@ -1,2 +1,3 @@
-/** Public macOS installer URL. Point all product CTAs here until cloud billing ships. */
-export const MACOS_DMG_URL = 'https://download.hemingway.md/hemingway-1.0.2.dmg';
+/** Public macOS installer URL. Set NEXT_PUBLIC_MACOS_DMG_URL in Vercel to bump. */
+export const MACOS_DMG_URL =
+  process.env.NEXT_PUBLIC_MACOS_DMG_URL ?? 'https://download.hemingway.md/hemingway-1.0.2.dmg';
