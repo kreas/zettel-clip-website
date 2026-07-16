@@ -13,7 +13,7 @@ describe('QuoteCta', () => {
     render(<QuoteCta />);
     expect(screen.getByRole('link', { name: /Download free for macOS/ })).toHaveAttribute(
       'href',
-      'https://download.hemingway.md/hemingway-1.0.0.dmg',
+      'https://download.hemingway.md/hemingway-1.0.2.dmg',
     );
   });
 });

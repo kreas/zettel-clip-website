@@ -19,7 +19,7 @@ describe('Hero', () => {
     render(<Hero />);
     expect(screen.getByRole('link', { name: 'Download for macOS' })).toHaveAttribute(
       'href',
-      'https://download.hemingway.md/hemingway-1.0.0.dmg',
+      'https://download.hemingway.md/hemingway-1.0.2.dmg',
     );
     expect(screen.getByRole('link', { name: /The method/ })).toHaveAttribute('href', '#method');
   });

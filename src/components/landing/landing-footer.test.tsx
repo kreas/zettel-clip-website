@@ -22,7 +22,7 @@ describe('LandingFooter', () => {
     expect(screen.getByRole('link', { name: 'LLM Wiki' })).toHaveAttribute('href', '/llm-wiki');
     expect(screen.getByRole('link', { name: 'Download' })).toHaveAttribute(
       'href',
-      'https://download.hemingway.md/hemingway-1.0.0.dmg',
+      'https://download.hemingway.md/hemingway-1.0.2.dmg',
     );
     expect(screen.getByRole('link', { name: 'Privacy' })).toBeInTheDocument();
   });

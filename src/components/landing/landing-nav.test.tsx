@@ -18,7 +18,7 @@ describe('LandingNav', () => {
     render(<LandingNav />);
     expect(screen.getByRole('link', { name: /Download/ })).toHaveAttribute(
       'href',
-      'https://download.hemingway.md/hemingway-1.0.0.dmg',
+      'https://download.hemingway.md/hemingway-1.0.2.dmg',
     );
   });
 });
